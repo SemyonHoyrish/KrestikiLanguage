@@ -171,15 +171,11 @@ public:
                         break;
 
                     default:
-                        //char cur = text[i];
-                        //std::cout << "CUR '" << cur << "'\n";
-                        
                         if (symbols_last_i == -1)
                         {
                             tokens.push_back({TokenKind::Symbols, ""});
                             symbols_tokens_ind = tokens.size() - 1;
                         }
-                        //else if (symbols_last_i != i - 1 || cur == ' ' || cur == '\n' || cur == '\r')
                         else if (symbols_last_i != i - 1)
                         {
                             tokens[symbols_tokens_ind].text = symbols;
@@ -190,13 +186,6 @@ public:
                         }
                         symbols += this->text[i];
                         symbols_last_i = i;
-                        /*
-                        std::string msg = "Unexpected symbol: '"; 
-                                    msg += this->text[i];
-                                    msg += "'";
-                        LogWarning(msg);
-                        */
-
                         break;
                 }
             }

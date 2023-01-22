@@ -37,12 +37,10 @@ public:
         std::string postfix = "\nreturn 0;\n}\n";
         std::string functions = "#include <iostream>\n";
         std::string output = "";
-        LogInfo(std::to_string(this->tokens.size()));
         
         bool tilda_opened = false;
         for(int i = 1; i < this->tokens.size() - 1; ++i)
         {
-            LogInfo("TOKEN: " + this->tokens[i].text);
             switch (this->tokens[i].kind)
             {
                 case TokenKind::Plus:
@@ -129,7 +127,6 @@ public:
                         }
                         Token if_operation = tokens[i + 1];
                         Token value        = tokens[i + 2];
-                        //Token 
 
                         if (value.kind != Symbols) {
                             LogFatal("Cannot do if operation on '" + value.text + "'");
@@ -161,15 +158,6 @@ public:
 
                     break;
                 }
-                /*case Less:
-                    break;
-                case Bigger:
-                    break;
-                case Equals:
-                    break;
-                case NotEquals:
-                    break;
-                    */
                 case Label:
                 {
                     Token right = tokens[i + 1];
@@ -318,8 +306,6 @@ public:
                     break;*/
             }
         }
-
-        //std::cout << "!@@!" << functions << "!AA" << std::endl;
 
         if (only_output) return output;
 

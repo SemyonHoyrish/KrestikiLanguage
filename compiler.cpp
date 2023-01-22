@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <map>
 
 #include "Utils.hpp"
 #include "Lexer.hpp"
@@ -15,9 +16,15 @@ int main(int argc, char** argv)
         LogFatal("Not enough arguments");
     }
 
+    map<std::string, bool> options;
+    for(int i = 2; i < argc; ++i) {
+        std::string sss = argv[i];
+        LogInfo("ARGV set: '" + sss + "'");
+        options[argv[i]] = true;
+    }
+
+
     string rawfilename = argv[1];
-    //string rawfilename = "test.krst";
-    cout << rawfilename << " 111 " << endl;
     string extension = rawfilename.substr(rawfilename.length() - 5, 5);
     if (extension != ".krst") {
         LogFatal("Unsupported file extension '" + extension + "'");
@@ -29,25 +36,19 @@ int main(int argc, char** argv)
     string input;
     string tmp;
     while (infile) {
-        //infile >> tmp;
         std::getline(infile, tmp);
         if (tmp.substr(0, 2) != "//") 
             input += tmp + "\n";
         tmp = "";
     }
-    cout << "!" << input << "!" <<endl;
     infile.close();
 
-    //Lexer *lexer = new Lexer("2 A 7");
     Lexer *lexer = new Lexer(input);
-    //Lexer *lexer = new Lexer("~ A )");
     vector<Token> tokens = lexer->Parse();
 
     Translator *translator = new Translator(tokens);
 
     string code = translator->GetCppCode();
-
-    cout << code << endl;
 
     std::string cpp_filename = "_krestikilang_" + filename + ".cpp";
     ofstream file(cpp_filename);
@@ -59,10 +60,21 @@ int main(int argc, char** argv)
         
 
     std::string answer;
-    cout << "Compile? [y/n] ";
-    cin >> answer;
+    if (options["compile"]) {
+        answer = "y";
+        cout << "Compiling" << endl;
+    }
+    else {
+        cout << "Compile? [y/n] ";
+        cin >> answer;
+    }
     if (answer == "y") {
-        system(("g++ " + cpp_filename + " -o " + filename + ".exe").c_str());
+        if (options["windows"])
+            system(("g++ " + cpp_filename + " -o " + filename + ".exe").c_str());
+        else if (options["linux"] || options["macos"])
+            system(("g++ " + cpp_filename + " -o " + filename).c_str());
+        else
+            LogError("OS not specified");
     }
 
     return 0;

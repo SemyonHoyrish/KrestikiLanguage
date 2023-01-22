@@ -9,6 +9,11 @@
 
 V a I 7  // Variable a integer 7
 
+V rrr I 0
+R rrr  // res from stdin
+U r rrr C 5   // updates variable value
+W rrr  // writes to stdout
+
 ~<a  // less than zero
 ~>a  // greater than zero
 ~=a  // equals to zero
@@ -21,7 +26,7 @@ V a I 7  // Variable a integer 7
 // S - string   
 
 
-F f(b I, c S) <R b C 2>   // function f which accept integer b, string c and returns b * 2
+F f(b I, c S) <T b C 2>   // function f which accept integer b, string c and returns(throws) b * 2
 
 
 :label

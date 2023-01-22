@@ -27,6 +27,10 @@ enum TokenKind
     Function,
     Integer,
     String,
+    Read,
+    Write,
+    Update,
+    Throw,
 
     Semicolon,
 
@@ -62,7 +66,7 @@ public:
     std::vector<Token> Parse()
     {
         std::vector<Token> tokens;
-        tokens.push_back({TokenKind::TOKENS_START, ""});
+        tokens.push_back({TokenKind::TOKENS_START, "<TOKENS_START>"});
         std::string symbols = "";
         int symbols_tokens_ind  = -1;
         int symbols_last_i  = -1;
@@ -132,14 +136,29 @@ public:
                 case ')':
                     tokens.push_back({TokenKind::CloseParenthesis, ")"});
                     break;
+                case 'R':
+                    tokens.push_back({TokenKind::Read, "R"});
+                    break;
+                case 'W':
+                    tokens.push_back({TokenKind::Write, "W"});
+                    break;
+                case 'U':
+                    tokens.push_back({TokenKind::Update, "U"});
+                    break;
+                case 'T':
+                    tokens.push_back({TokenKind::Throw, "T"});
+                    break;
 
                 default:
+                    //char cur = text[i];
+                    //std::cout << "CUR '" << cur << "'\n";
+
                     if (symbols_last_i == -1)
                     {
                         tokens.push_back({TokenKind::Symbols, ""});
                         symbols_tokens_ind = tokens.size() - 1;
-                        symbols_last_i = i;
                     }
+                    //else if (symbols_last_i != i - 1 || cur == ' ' || cur == '\n' || cur == '\r')
                     else if (symbols_last_i != i - 1)
                     {
                         tokens[symbols_tokens_ind].text = symbols;
@@ -147,18 +166,16 @@ public:
 
                         tokens.push_back({TokenKind::Symbols, ""});
                         symbols_tokens_ind = tokens.size() - 1;
-                        symbols_last_i = i;
                     }
-                    else
-                    {
-                        symbols += this->text[i];
-                    }
+                    symbols += this->text[i];
+                    symbols_last_i = i;
                     /*
                     std::string msg = "Unexpected symbol: '"; 
                                 msg += this->text[i];
                                 msg += "'";
                     LogWarning(msg);
                     */
+
                     break;
             }
 
@@ -169,7 +186,7 @@ public:
             tokens[symbols_tokens_ind].text = symbols;
         }
 
-        tokens.push_back({TokenKind::TOKENS_END, ""});
+        tokens.push_back({TokenKind::TOKENS_END, "<TOKENS_END>"});
         return tokens;
     }
 

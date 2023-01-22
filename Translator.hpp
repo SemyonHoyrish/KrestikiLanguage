@@ -17,7 +17,7 @@ public:
 
     std::string GetCppCode()
     {
-        std::string output = "";
+        std::string output = "#include <iostream>\nint main(){\n";
         LogInfo(std::to_string(this->tokens.size()));
         
         bool tilda_opened = false;
@@ -27,6 +27,7 @@ public:
             switch (this->tokens[i].kind)
             {
                 case TokenKind::Plus:
+                {
                     Token left = tokens[i - 1];
                     Token right = tokens[i + 1];
                     
@@ -39,8 +40,9 @@ public:
                     output += left.text + " + " + right.text;
 
                     break;
-
-                case Minus:
+                }
+                case TokenKind::Minus:
+                {
                     Token left = tokens[i - 1];
                     Token right = tokens[i + 1];
                     
@@ -53,8 +55,9 @@ public:
                     output += left.text + " - " + right.text;
                     
                     break;
-
+                }
                 case Multiplication:
+                {
                     Token left = tokens[i - 1];
                     Token right = tokens[i + 1];
                     
@@ -67,8 +70,9 @@ public:
                     output += left.text + " * " + right.text;
     
                     break;
-                
+                }
                 case Division:
+                {
                     Token left = tokens[i - 1];
                     Token right = tokens[i + 1];
                     
@@ -81,8 +85,9 @@ public:
                     output += left.text + " / " + right.text;
                     
                     break;
-
+                }
                 case Remainder:
+                {
                     Token left = tokens[i - 1];
                     Token right = tokens[i + 1];
                     
@@ -95,16 +100,17 @@ public:
                     output += left.text + " % " + right.text;
                     
                     break;
-                
+                }
                 case Tilda:
+                {
                     if (!tilda_opened)
                     {
-                        if (i + 3 >= tokens.size()) {
+                        if (i + 2 >= tokens.size()) {
                             LogFatal("Not enough tokens to process if operation");
                         }
                         Token if_operation = tokens[i + 1];
                         Token value        = tokens[i + 2];
-                        Token 
+                        //Token 
 
                         if (value.kind != Symbols) {
                             LogFatal("Cannot do if operation on '" + value.text + "'");
@@ -135,8 +141,8 @@ public:
                     }
 
                     break;
-
-                case Less:
+                }
+                /*case Less:
                     break;
                 case Bigger:
                     break;
@@ -144,31 +150,113 @@ public:
                     break;
                 case NotEquals:
                     break;
+                    */
                 case Label:
-                    break;
-                case GoTo:
-                    break;
-                case Variable:
-                    break;
-                case Function:
-                    break;
-                case Integer:
-                    break;
-                case String:
-                    break;
+                {
+                    Token right = tokens[i + 1];
+                    if (right.kind != TokenKind::Symbols) {
+                        LogFatal("Unexpected definition of label: '" + right.text + "'");
+                    }
 
+                    output += "\n" + right.text + ":\n";
+                    break;
+                }
+                case GoTo: 
+                {
+                    Token right = tokens[i + 1];
+                    if (right.kind != TokenKind::Symbols) {
+                        LogFatal("Unexpected target of goto: '" + right.text + "'");
+                    }
+
+                    output += "goto " + right.text + ";";
+                    break;
+                }
+                case Variable:
+                {
+                    if (i + 3 >= tokens.size()) {
+                        LogFatal("Not enough arguments for variable definition");
+                    }
+                    Token name = tokens[i + 1];
+                    Token type = tokens[i + 2];
+                    // TODO: string value assignment
+                    Token value = tokens[i + 3];
+
+                    switch (type.kind)
+                    {
+                    case TokenKind::Integer:
+                        output += "long long int";
+                        break;
+                    case TokenKind::String:
+                        output += "std::string";
+                        break;
+                    default:
+                        LogFatal("Unexpected type '" + type.text + "'");
+                        break;
+                    }
+
+                    output += " " + name.text + " = " + value.text + ";";
+
+                    break;
+                }
+                //case Function:
+                //    break;
+                
                 case Semicolon:
                     output += ";";
                     break;
 
-                case OpenParenthesis:
+                case Read:
+                {
+                    Token name = tokens[i + 1];
+                    if (name.kind != TokenKind::Symbols) {
+                        LogFatal("Not a variable name: '" + name.text + "'");
+                    }
+                    output += "std::cin >> " + name.text + ";";
+                    break;
+                }
+                case Write:
+                {
+                    Token name = tokens[i + 1];
+                    if (name.kind != TokenKind::Symbols) {
+                        LogFatal("Not a variable name: '" + name.text + "'");
+                    }
+                    output += "std::cout << " + name.text + ";";
+                    
+                    break;
+                }
+                case Update:
+                {
+                    if (i + 1 >= tokens.size()) {
+                        LogFatal("Not enough arguments for <UPDATE>");
+                    }
+                    
+                    Token name = tokens[i + 1];
+                    if (name.kind != TokenKind::Symbols) {
+                        LogFatal("Not a variable name: '" + name.text + "'");
+                    }
+                    output += name.text + " = ";
+                    
+                    break;
+                }
+                case Throw:
+                {
+                    Token name = tokens[i + 1];
+                    if (name.kind != TokenKind::Symbols) {
+                        LogFatal("Not a variable name: '" + name.text + "'");
+                    }
+                    output += "return " + name.text + ";";
+                           
+                    break;
+                }
+
+                /*case OpenParenthesis:
                     break;
                 case CloseParenthesis:
-                    break;
+                    break;*/
             }
         }
-
-        return "";
+        output += "\n}\n";
+        return output;
     }
 
 };

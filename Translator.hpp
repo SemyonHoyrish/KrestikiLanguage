@@ -21,6 +21,8 @@ private:
                 LogFatal("Does not a type!");
                 break;
         }
+
+        return "";
     }
 
 public:

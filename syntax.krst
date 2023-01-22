@@ -1,0 +1,32 @@
+
+// SYNTAX of Krestiki Language
+
+5 A 2  // 7
+5 B 2  // 3
+5 C 2  // 10
+5 D 2  // 2
+5 E 2  // 1
+
+V a I 7  // Variable a integer 7
+
+~<a  // less than zero
+~>a  // greater than zero
+~=a  // equals to zero
+~!a  // not equals to zero
+
+
+
+// Types:
+// I - integer  int64
+// S - string   
+
+
+F f(b I, c S) <R b C 2>   // function f which accept integer b, string c and returns b * 2
+
+
+:label
+
+G label  // goto label
+
+
+

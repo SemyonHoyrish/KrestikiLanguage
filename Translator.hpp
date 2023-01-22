@@ -35,7 +35,7 @@ public:
     {
         std::string prefix = "\nint main(){\n";
         std::string postfix = "\nreturn 0;\n}\n";
-        std::string functions = "#include <iostream>\n";
+        std::string functions = "#include <iostream>\nconst std::string _X1 = \"\\n\";\n";
         std::string output = "";
         
         bool tilda_opened = false;

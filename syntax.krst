@@ -34,4 +34,7 @@ F f I(b I, c S) <T b C 2>   // function f (return type int) which accept integer
 G label  // goto label
 
 
+// Language constants:
+// _X1 - newline (\n)
+
 

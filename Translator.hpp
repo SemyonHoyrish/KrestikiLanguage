@@ -32,7 +32,7 @@ public:
     std::string GetCppCode(bool only_output=false)
     {
         std::string prefix = "\nint main(){\n";
-        std::string postfix = "\n}\n";
+        std::string postfix = "\nreturn 0;\n}\n";
         std::string functions = "#include <iostream>\n";
         std::string output = "";
         LogInfo(std::to_string(this->tokens.size()));

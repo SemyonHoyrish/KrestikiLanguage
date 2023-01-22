@@ -32,6 +32,7 @@ enum TokenKind
     Update,
     Throw,
 
+    Comma,
     Semicolon,
 
     OpenParenthesis,
@@ -147,6 +148,9 @@ public:
                     break;
                 case 'T':
                     tokens.push_back({TokenKind::Throw, "T"});
+                    break;
+                case ',':
+                    tokens.push_back({TokenKind::Comma, ","});
                     break;
 
                 default:

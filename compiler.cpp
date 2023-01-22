@@ -34,7 +34,8 @@ int main(int argc, char** argv)
     while (infile) {
         //infile >> tmp;
         std::getline(infile, tmp);
-        input += tmp + "\n";
+        if (tmp.substr(0, 2) != "//") 
+            input += tmp + "\n";
         tmp = "";
     }
     cout << "!" << input << "!" <<endl;

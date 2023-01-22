@@ -9,15 +9,32 @@ class Translator
 private:
     std::vector<Token> tokens;
 
+    std::string TypeByTokenKind(TokenKind kind)
+    {
+        switch (kind)
+        {
+            case Integer:
+                return "long long int";
+            case String:
+                return "std::string";
+            default:
+                LogFatal("Does not a type!");
+                break;
+        }
+    }
+
 public:
     Translator(std::vector<Token> tokens)
     {
         this->tokens = tokens;
     }
 
-    std::string GetCppCode()
+    std::string GetCppCode(bool only_output=false)
     {
-        std::string output = "#include <iostream>\nint main(){\n";
+        std::string prefix = "\nint main(){\n";
+        std::string postfix = "\n}\n";
+        std::string functions = "#include <iostream>\n";
+        std::string output = "";
         LogInfo(std::to_string(this->tokens.size()));
         
         bool tilda_opened = false;
@@ -198,9 +215,53 @@ public:
 
                     break;
                 }
-                //case Function:
-                //    break;
-                
+                case Function:
+                {
+                    // TODO: check token kinds
+                    
+                    Token name = tokens[i + 1];
+                    Token type = tokens[i + 2];
+                    Token openpar = tokens[i + 3];
+
+                    if (openpar.kind != TokenKind::OpenParenthesis) {
+                        LogFatal("");
+                    }
+                    functions += TypeByTokenKind(type.kind) + " " + name.text + "(";
+
+                    i += 4;
+                    std::string argname = "";
+                    while(tokens[i].kind != TokenKind::CloseParenthesis) {
+                        switch (tokens[i].kind)
+                        {
+                            case Comma:
+                                functions += ",";
+                                break;
+                            
+                            case Symbols:
+                                argname = tokens[i].text;
+                                break;
+
+                            case Integer:
+                            case String:
+                                functions += TypeByTokenKind(tokens[i].kind) + " " + argname;
+                                argname = "";
+                                break;
+                        }
+                        i++;
+                    }
+                    i++;
+                    functions += ") {";
+                    std::vector<Token> func_inner;
+                    while(tokens[i].kind != TokenKind::Bigger) {
+                        func_inner.push_back(tokens[i]);
+                        i++;
+                    }
+                    Translator *tr = new Translator(func_inner);
+                    functions += tr->GetCppCode(true);
+                    functions += "}";
+
+                    break;
+                }
                 case Semicolon:
                     output += ";";
                     break;
@@ -255,8 +316,12 @@ public:
                     break;*/
             }
         }
-        output += "\n}\n";
-        return output;
+
+        //std::cout << "!@@!" << functions << "!AA" << std::endl;
+
+        if (only_output) return output;
+
+        return functions + prefix + output + postfix;
     }
 
 };

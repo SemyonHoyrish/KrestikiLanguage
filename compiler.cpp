@@ -17,6 +17,20 @@ int main(int argc, char** argv)
     }
 
 
+    if (std::string(argv[1]) == "help") {
+        
+        cout << "Krestiki Language Compiler\n\n"
+            << "Usage: \n"
+            << "krestiki[.exe] <source>.krst [OPTIONS]\n\n"
+            << "Available options: \n"
+            << "--target windows | linux | macos  - specify OS\n"
+            << "--compile                         - skip compilation confirmation\n"
+            << "--keep-cpp                        - do not remove generated c++ code\n"
+            ;
+
+        return 0;
+    }
+
     map<std::string, std::string> options;
     for (int i = 2; i < argc; ++i) {
         std::string option_name = argv[i];

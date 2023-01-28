@@ -10,6 +10,8 @@ build.bat
 krestiki.exe hello_world.krst --target windows --compile
 hello_world.exe
 ```
+To get more information about available options run `krestiki.exe help`
+
 
 ### Linux
 ```bash
@@ -17,6 +19,8 @@ hello_world.exe
 ./krestiki hello_world.krst --target linux --compile
 ./hello_world
 ```
+To get more information about available options run `krestiki help`
+
 
 ### MacOS
 ```bash
@@ -24,6 +28,8 @@ hello_world.exe
 ./krestiki hello_world.krst --target macos --compile
 ./hello_world
 ```
+To get more information about available options run `krestiki help`
+
 
 ## Docs
 
@@ -61,7 +67,7 @@ U int_variable 5 A 4;
 ```
 You can update a value only by using some arithmetic operation or function call
 
-#### Conditions
+### Conditions
 There are only 4 types of conditions you can use:
 - variable value bigger than zero
 - variable value less than zero
@@ -90,13 +96,13 @@ V a I 0
 
 ```
 
-#### Stdin & Stdout (Read & Write)
+### Stdin & Stdout (Read & Write)
 ```
 R <var_name> // read from stdin to variable
 W <var_name> // write value of variable to stdout
 ```
 
-#### Function Definition
+### Function Definition
 ```
 F <func_name> <type>(<arg_name> <arg_type> [, <arg2_name> <arg2_type> [, ...]]) <
     // some code
@@ -111,7 +117,7 @@ F sum I(a I, b I) <
 >
 ```
 
-#### Function Call
+### Function Call
 ```
 @<func_name>(<args>);
 
@@ -124,7 +130,7 @@ V result I 0
 @sum(a, b);
 ```
 
-#### Label & Goto
+### Label & Goto
 ```
 :<label_name>
 
@@ -146,7 +152,7 @@ U res a C a
 W res
 ```
 
-#### Arrays
+### Arrays
 ```
 M <array_name> <type> <size>
 
@@ -154,12 +160,12 @@ Example:
 M my_array I 40
 ```
 
-#### Built-in constants
+### Built-in constants
 | Constant | Value | Description |
 |----------|-------|-------------|
 | _X1 | \n | newline |
 
-#### Built-in functions
+### Built-in functions
 | Function Name | Arguments | Description |
 |---------------|-----------|-------------|
 | _X2 | string S, index I | Returns string which contains symbol from `string` at position `index` |

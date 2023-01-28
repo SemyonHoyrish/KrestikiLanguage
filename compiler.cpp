@@ -16,13 +16,28 @@ int main(int argc, char** argv)
         LogFatal("Not enough arguments");
     }
 
-    map<std::string, bool> options;
-    for(int i = 2; i < argc; ++i) {
-        std::string sss = argv[i];
-        LogInfo("ARGV set: '" + sss + "'");
-        options[argv[i]] = true;
+
+    map<std::string, std::string> options;
+    for (int i = 2; i < argc; ++i) {
+        std::string option_name = argv[i];
+        if (option_name.substr(0, 2) == "--") {
+            std::string option_value = "1";
+            if (i < argc - 1 && std::string(argv[i + 1]).substr(0, 2) != "--") {
+                option_value = argv[i + 1];
+            }
+            options[option_name.substr(2, option_name.length() - 2)] = option_value;
+        }
     }
 
+    if (options["target"] != "windows" &&
+        options["target"] != "linux"   &&
+        options["target"] != "macos") {
+        LogFatal("Target OS not specified");
+    }
+
+    for (const auto &[key, value] : options) {
+        LogInfo("Option '" + key + "' == '" + value + "'");
+    }
 
     string rawfilename = argv[1];
     string extension = rawfilename.substr(rawfilename.length() - 5, 5);
@@ -57,24 +72,41 @@ int main(int argc, char** argv)
     file << code;
 
     file.close();
-        
+
 
     std::string answer;
-    if (options["compile"]) {
+    if (options["compile"] == "1") {
         answer = "y";
-        cout << "Compiling" << endl;
+        cout << "Compiling..." << endl;
     }
     else {
         cout << "Compile? [y/n] ";
         cin >> answer;
     }
+
+    std::string output_filename = "";
+    if (options["output"] != "") {
+        output_filename = options["output"];
+    }
+    else {
+        if (options["target"] == "windows")
+            output_filename = filename + ".exe";
+        else if (options["target"] == "linux" || options["target"] == "macos")
+            output_filename;
+    }
+    
     if (answer == "y") {
-        if (options["windows"])
-            system(("g++ " + cpp_filename + " -o " + filename + ".exe").c_str());
-        else if (options["linux"] || options["macos"])
-            system(("g++ " + cpp_filename + " -o " + filename).c_str());
-        else
-            LogError("OS not specified");
+        if (options["target"] == "windows")
+            system(("g++ " + cpp_filename + " -o " + output_filename).c_str());
+        else if (options["target"] == "linux" || options["target"] == "macos")
+            system(("g++ " + cpp_filename + " -o " + output_filename).c_str());
+    }
+  
+    if (options["keep-cpp"] == "") {
+         if (options["target"] == "windows")
+            system(("del " + cpp_filename).c_str());
+        else if (options["target"] == "linux" || options["target"] == "macos")
+            system(("rm " + cpp_filename).c_str());
     }
 
     return 0;

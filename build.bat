@@ -1,1 +1,1 @@
-g++ --std=c++17 compiler.cpp -o krestiki.exe
+g++ --std=c++17 src\compiler.cpp -o krestiki.exe

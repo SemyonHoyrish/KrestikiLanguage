@@ -1,0 +1,60 @@
+V n I 0
+R n
+
+V to_found I 0
+R to_found
+
+M arr I n
+
+
+V i I 0
+V tmp I 0
+
+:read_loop
+U tmp n B i;
+~>tmp
+    V val I 0
+    R val
+    @_X3(arr, i, val);
+    U i i A 1;
+    G read_loop
+~
+
+
+V l I 0
+V r I n
+
+:bin_search
+V m I 0
+U m l A r;
+U m m D 2;
+
+V v I 0
+@_X4(arr, m, v);
+
+V diff I 0
+
+U diff v B to_found;
+~=diff
+    W |Found at index |
+    W m
+    G end
+~
+~>diff
+    U r m C 1;
+~
+~<diff
+    U l m C 1;
+~
+
+U diff r B l;
+U diff diff B 1;
+~>diff
+    G bin_search
+~
+
+
+W |Not found|
+
+:end
+

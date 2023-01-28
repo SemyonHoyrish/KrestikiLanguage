@@ -35,12 +35,29 @@ public:
     {
         std::string prefix = "\nint main(){\n";
         std::string postfix = "\nreturn 0;\n}\n";
-        std::string functions = "#include <iostream>\nconst std::string _X1 = \"\\n\";\n";
+        std::string functions = (std::string)"#include <iostream>\n"
+            + "#define I_type long long int\n"
+            + "const std::string _X1 = \"\\n\";\n"
+            + "std::string _X2(std::string s, I_type index) {"
+            + "return ((std::string)\"\" + s[index]);"
+            + "}\n"
+            + "void _X3(I_type arr[], I_type index, I_type value) {"
+            + "arr[index] = value; }\n"
+            + "void _X3(std::string arr[], I_type index, std::string value) {"
+            + "arr[index] = value; }\n"
+            + "void _X4(I_type arr[], I_type index, I_type &value) {"
+            + "value = arr[index]; }\n"
+            + "void _X4(std::string arr[], I_type index, std::string &value) {"
+            + "value = arr[index]; }\n"
+            ;
+
         std::string output = "";
         
         bool tilda_opened = false;
         for(int i = 1; i < this->tokens.size() - 1; ++i)
         {
+
+            // TODO: Check if there are enough tokens to translate operation
             switch (this->tokens[i].kind)
             {
                 case TokenKind::Plus:
@@ -260,7 +277,6 @@ public:
                     i++;
                     output += name.text + "(";
                     while (tokens[i].kind != TokenKind::CloseParenthesis) {
-                        LogInfo(tokens[i].text);
                         if (tokens[i].kind == TokenKind::Comma) {
                             output += ", ";
                         }
@@ -319,6 +335,16 @@ public:
                     }
                     output += "return " + name.text + ";";
                            
+                    break;
+                }
+                case Array:
+                {
+                    Token name = tokens[i + 1];
+                    Token type = tokens[i + 2];
+                    Token size = tokens[i + 3];
+
+                    output += TypeByTokenKind(type.kind) + " " + name.text + "[" + size.text + "];";
+
                     break;
                 }
 

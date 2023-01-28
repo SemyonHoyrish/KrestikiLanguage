@@ -32,6 +32,7 @@ enum TokenKind
     Write,
     Update,
     Throw,
+    Array,
 
     Comma,
     Semicolon,
@@ -169,6 +170,9 @@ public:
                         break;
                     case 'T':
                         tokens.push_back({TokenKind::Throw, "T"});
+                        break;
+                    case 'M':
+                        tokens.push_back({TokenKind::Array, "M"});
                         break;
                     case ',':
                         tokens.push_back({TokenKind::Comma, ","});

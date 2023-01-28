@@ -252,6 +252,28 @@ public:
 
                     break;
                 }
+                case FunctionCall:
+                {
+                    Token name = tokens[i + 1];
+                    i++;
+                    i++;
+                    i++;
+                    output += name.text + "(";
+                    while (tokens[i].kind != TokenKind::CloseParenthesis) {
+                        LogInfo(tokens[i].text);
+                        if (tokens[i].kind == TokenKind::Comma) {
+                            output += ", ";
+                        }
+                        else {
+                            output += tokens[i].text;
+                        }
+                        i++;
+                    }
+
+                    output += ")";
+
+                    break;
+                }
                 case Semicolon:
                     output += ";";
                     break;

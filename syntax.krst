@@ -10,8 +10,8 @@
 V a I 7  // Variable a integer 7
 
 V rrr I 0
-R rrr  // res from stdin
-U rrr rrr C 5   // updates variable value
+R rrr  // read from stdin
+U rrr rrr C 5;   // updates variable value
 W rrr  // writes to stdout
 
 ~<a  // less than zero
@@ -28,6 +28,7 @@ W rrr  // writes to stdout
 
 F f I(b I, c S) <T b C 2>   // function f (return type int) which accept integer b, string c and returns(throws) b * 2
 
+@f(1231, |aaaasd|);
 
 :label
 

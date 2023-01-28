@@ -25,6 +25,7 @@ enum TokenKind
     GoTo,
     Variable,
     Function,
+    FunctionCall,
     Integer,
     String,
     Read,
@@ -117,6 +118,9 @@ public:
                         break;
                     case 'F':
                         tokens.push_back({TokenKind::Function, "F"});
+                        break;
+                    case '@':
+                        tokens.push_back({TokenKind::FunctionCall, "@"});
                         break;
                     case '~':
                         tokens.push_back({TokenKind::Tilda, "~"});

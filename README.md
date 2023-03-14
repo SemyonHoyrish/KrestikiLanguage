@@ -104,17 +104,17 @@ W <var_name> // write value of variable to stdout
 
 ### Function Definition
 ```
-F <func_name> <type>(<arg_name> <arg_type> [, <arg2_name> <arg2_type> [, ...]]) <
+F <func_name> <type>(<arg_name> <arg_type> [, <arg2_name> <arg2_type> [, ...]])
     // some code
     T <result> // throw (return) value
->
+%
 
 Example:
-F sum I(a I, b I) <
+F sum I(a I, b I)
     V res I 0
     U res a A b;
     T res
->
+%
 ```
 
 ### Function Call
@@ -164,6 +164,7 @@ M my_array I 40
 | Constant | Value | Description |
 |----------|-------|-------------|
 | _X1 | \n | newline |
+| _X5 | \| | special symbol ' \| ' |
 
 ### Built-in functions
 | Function Name | Arguments | Description |

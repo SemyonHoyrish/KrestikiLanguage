@@ -38,6 +38,7 @@ public:
         std::string functions = (std::string)"#include <iostream>\n"
             + "#define I_type long long int\n"
             + "const std::string _X1 = \"\\n\";\n"
+            + "const std::string _X5 = \"|\";\n"
             + "std::string _X2(std::string s, I_type index) {"
             + "return ((std::string)\"\" + s[index]);"
             + "}\n"
@@ -256,10 +257,10 @@ public:
                         }
                         i++;
                     }
-                    i++;
+                    //i++;
                     functions += ") {";
                     std::vector<Token> func_inner;
-                    while(tokens[i].kind != TokenKind::Bigger) {
+                    while(tokens[i].kind != TokenKind::Percent) {
                         func_inner.push_back(tokens[i]);
                         i++;
                     }

@@ -37,6 +37,8 @@ enum TokenKind
     Comma,
     Semicolon,
 
+    Percent,
+
     OpenParenthesis,
     CloseParenthesis,
     //OpenArrow, // Less
@@ -143,6 +145,9 @@ public:
                         break;
                     case ';':
                         tokens.push_back({TokenKind::Semicolon, ";"});
+                        break;
+                    case '%':
+                        tokens.push_back({TokenKind::Percent, "%"});
                         break;
                     case 'G':
                         tokens.push_back({TokenKind::GoTo, "G"});

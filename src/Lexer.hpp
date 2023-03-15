@@ -28,6 +28,7 @@ enum TokenKind
     FunctionCall,
     Integer,
     String,
+    Pointer,
     Read,
     Write,
     Update,
@@ -151,6 +152,9 @@ public:
                         break;
                     case 'G':
                         tokens.push_back({TokenKind::GoTo, "G"});
+                        break;
+                    case 'P':
+                        tokens.push_back({TokenKind::Pointer, "P"});
                         break;
                     case 'I':
                         tokens.push_back({TokenKind::Integer, "I"});

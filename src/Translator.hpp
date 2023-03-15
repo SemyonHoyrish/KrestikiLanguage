@@ -238,6 +238,7 @@ public:
 
                     i += 4;
                     std::string argname = "";
+                    bool is_ptr = false;
                     while(tokens[i].kind != TokenKind::CloseParenthesis) {
                         switch (tokens[i].kind)
                         {
@@ -249,10 +250,15 @@ public:
                                 argname = tokens[i].text;
                                 break;
 
+                            case Pointer:
+                                is_ptr = true;
+                                break;
+
                             case Integer:
                             case String:
-                                functions += TypeByTokenKind(tokens[i].kind) + " " + argname;
+                                functions += TypeByTokenKind(tokens[i].kind) + (is_ptr ? "*" : "") + " " + argname;
                                 argname = "";
+                                is_ptr = false;
                                 break;
                         }
                         i++;
@@ -280,6 +286,9 @@ public:
                     while (tokens[i].kind != TokenKind::CloseParenthesis) {
                         if (tokens[i].kind == TokenKind::Comma) {
                             output += ", ";
+                        }
+                        else if (tokens[i].kind == TokenKind::Pointer) {
+                            output += "&";
                         }
                         else {
                             output += tokens[i].text;
@@ -353,6 +362,10 @@ public:
                     break;
                 case CloseParenthesis:
                     break;*/
+
+                default:
+                    //LogWarning("Unexpected token '" + tokens[i].text + "'");
+                    break;
             }
         }
 

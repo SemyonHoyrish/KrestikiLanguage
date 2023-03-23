@@ -37,10 +37,10 @@ To get more information about available options run `krestiki help`
 | Krestiki Lang | C++ | Example | Description |
 |---------------|-----|---------|-------------|
 | A | + | 5 A 2 (=7) | - |
-| B | - | 5 A 2 (=3) | - |
-| C | * | 5 A 2 (=10) | - |
-| D | / | 5 A 2 (=2) | - |
-| E | % | 5 A 3 (=1) | - |
+| B | - | 5 B 2 (=3) | - |
+| C | * | 5 C 2 (=10) | - |
+| D | / | 5 D 2 (=2) | - |
+| E | % | 5 E 3 (=1) | - |
 
 ### Types
 - `I` - int64
@@ -60,12 +60,11 @@ V string S |some string value with @ny sy&mbols ! 23*#( _#$|
 
 #### Update variable value:
 ```
-U <var_name> <new_value_operation>; // semicolon required
+U <var_name> <new_value>; // semicolon required
 
 Example:
 U int_variable 5 A 4;
 ```
-You can update a value only by using some arithmetic operation or function call
 
 ### Conditions
 There are only 4 types of conditions you can use:
@@ -158,6 +157,36 @@ M <array_name> <type> <size>
 
 Example:
 M my_array I 40
+```
+
+### Pointers
+```
+P I/S/M - pointer to integer/string/memory(array)
+L - load value from pointer
+
+
+Example:
+F function_with_pointer_argument I (pointer_arg P I, arg I)
+W arg
+W _X1
+
+W L pointer_arg
+W _X1
+
+U L pointer_arg 70;
+
+T 0 
+%
+
+V some_variable I 66
+@function_with_pointer_argument(P some_variable, 213);
+W some_variable
+
+// Output is:
+// 213
+// 66
+// 70
+
 ```
 
 ### Built-in constants

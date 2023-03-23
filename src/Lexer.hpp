@@ -29,6 +29,7 @@ enum TokenKind
     Integer,
     String,
     Pointer,
+    Load,
     Read,
     Write,
     Update,
@@ -155,6 +156,9 @@ public:
                         break;
                     case 'P':
                         tokens.push_back({TokenKind::Pointer, "P"});
+                        break;
+                    case 'L':
+                        tokens.push_back({TokenKind::Load, "L"});
                         break;
                     case 'I':
                         tokens.push_back({TokenKind::Integer, "I"});

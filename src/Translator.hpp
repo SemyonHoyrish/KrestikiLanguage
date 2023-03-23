@@ -36,19 +36,20 @@ public:
         std::string prefix = "\nint main(){\n";
         std::string postfix = "\nreturn 0;\n}\n";
         std::string functions = (std::string)"#include <iostream>\n"
+            + "#include <vector>\n"
             + "#define I_type long long int\n"
             + "const std::string _X1 = \"\\n\";\n"
             + "const std::string _X5 = \"|\";\n"
             + "std::string _X2(std::string s, I_type index) {"
             + "return ((std::string)\"\" + s[index]);"
             + "}\n"
-            + "void _X3(I_type arr[], I_type index, I_type value) {"
+            + "void _X3(std::vector<I_type>& arr, I_type index, I_type value) {"
             + "arr[index] = value; }\n"
-            + "void _X3(std::string arr[], I_type index, std::string value) {"
+            + "void _X3(std::vector<std::string>& arr, I_type index, std::string value) {"
             + "arr[index] = value; }\n"
-            + "void _X4(I_type arr[], I_type index, I_type &value) {"
+            + "void _X4(std::vector<I_type> arr, I_type index, I_type &value) {"
             + "value = arr[index]; }\n"
-            + "void _X4(std::string arr[], I_type index, std::string &value) {"
+            + "void _X4(std::vector<std::string> arr, I_type index, std::string &value) {"
             + "value = arr[index]; }\n"
             ;
 
@@ -239,6 +240,7 @@ public:
                     i += 4;
                     std::string argname = "";
                     bool is_ptr = false;
+                    bool is_mem = false;
                     while(tokens[i].kind != TokenKind::CloseParenthesis) {
                         switch (tokens[i].kind)
                         {
@@ -254,9 +256,13 @@ public:
                                 is_ptr = true;
                                 break;
 
+                            case Array:
+                                is_mem = true;
+                                break;
+
                             case Integer:
                             case String:
-                                functions += TypeByTokenKind(tokens[i].kind) + (is_ptr ? "*" : "") + " " + argname;
+                                functions += (is_mem ? "std::vector<" : "") + TypeByTokenKind(tokens[i].kind) + (is_mem ? ">" : "") + (is_ptr ? "*" : "") + " " + argname;
                                 argname = "";
                                 is_ptr = false;
                                 break;
@@ -290,6 +296,9 @@ public:
                         else if (tokens[i].kind == TokenKind::Pointer) {
                             output += "&";
                         }
+                        else if (tokens[i].kind == TokenKind::Load) {
+                            output += "*";
+                        }
                         else {
                             output += tokens[i].text;
                         }
@@ -316,10 +325,19 @@ public:
                 case Write:
                 {
                     Token name = tokens[i + 1];
-                    if (name.kind != TokenKind::Symbols) {
-                        LogFatal("Not a variable name: '" + name.text + "'");
+                   
+                    bool is_load = false;
+                    if (name.kind == TokenKind::Load) {
+                        name = tokens[i + 2];
+                        i++;
+                        is_load = true;
                     }
-                    output += "std::cout << " + name.text + ";";
+
+                    // TODO: do check
+                    /*if (name.kind != TokenKind::Symbols) {
+                        LogFatal("Not a variable name: '" + name.text + "'");
+                    }*/
+                    output += (std::string)"std::cout << " + (is_load ? "*" : "") + name.text + ";";
                     
                     break;
                 }
@@ -330,11 +348,26 @@ public:
                     }
                     
                     Token name = tokens[i + 1];
-                    if (name.kind != TokenKind::Symbols) {
+                    if (name.kind == TokenKind::Load && tokens[i + 2].kind == TokenKind::Symbols) {
+                        output += "*";
+                        name = tokens[i + 2];
+                        i++;
+                    }
+                    else if (name.kind != TokenKind::Symbols) {
                         LogFatal("Not a variable name: '" + name.text + "'");
                     }
+ 
                     output += name.text + " = ";
-                    
+
+                    if (tokens.size() > i + 2) {
+                        if (tokens[i + 3].kind == TokenKind::Semicolon
+                                && tokens[i + 2].kind == TokenKind::Symbols) {
+                            output += tokens[i + 2].text;
+                            i++;
+                            i++;
+                        }
+                    }
+
                     break;
                 }
                 case Throw:
@@ -353,7 +386,7 @@ public:
                     Token type = tokens[i + 2];
                     Token size = tokens[i + 3];
 
-                    output += TypeByTokenKind(type.kind) + " " + name.text + "[" + size.text + "];";
+                    output += "std::vector<" + TypeByTokenKind(type.kind) + "> " + name.text + "(" + size.text + ");";
 
                     break;
                 }
